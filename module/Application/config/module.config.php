@@ -24,21 +24,24 @@ return [
                     ],
                 ],
             ],
-            'application' => [
+            'products' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/application[/:action]',
+                    'route'    => '/products[/:id]',
                     'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action'     => 'index',
+                        'controller' => Controller\ProductsRestController::class
                     ],
+                    'constraints' => [
+                        'id' => '[0-9]+'
+                    ]
                 ],
             ],
         ],
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => InvokableFactory::class,
+            Controller\IndexController::class         => InvokableFactory::class,
+            Controller\ProductsRestController::class  => Controller\ProductsRestControllerFactory::class,
         ],
     ],
     'view_manager' => [
@@ -56,5 +59,8 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'strategies' => [
+            'ViewJsonStrategy',
+        ]
     ],
 ];
