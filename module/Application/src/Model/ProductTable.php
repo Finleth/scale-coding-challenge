@@ -59,6 +59,23 @@ class ProductTable
     }
 
     /**
+     * Gets a single product by ID
+     * 
+     * @param integer The unique identifier for a product
+     * 
+     * @return array
+     */
+    public function getProduct(int $id)
+    {
+        $rowset = $this->tableGateway->select(['id' => $id]);
+        $row = $rowset->current();
+        
+        $product = $row ? $row->toArray() : null;
+
+        return $product;
+    }
+
+    /**
      * Takes an instance of a Product model and inserts
      * it into the products table.
      * 

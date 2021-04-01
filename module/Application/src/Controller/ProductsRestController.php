@@ -20,11 +20,11 @@ class ProductsRestController extends AbstractRestfulController
     }
 
     /**
-     * GET /products[?limit=25][&page=0][&sort=id]
+     * The handler for the GET /products[?limit=25][&page=0][&sort=id] endpoint
      * 
      * Returns a list of filtered and sorted products
      * 
-     * @return JsonModel
+     * @return JsonModel An array of product objects
      */
     public function getList()
     {
@@ -47,20 +47,27 @@ class ProductsRestController extends AbstractRestfulController
         return new JsonModel(['data' => $products]);
     }
 
+    /**
+     * The handler for the GET /products/{id} endpoint
+     * 
+     * @param int The unique identifier for a product 
+     * 
+     * @return JsonModel A product object
+     */
     public function get($id)
     {
-        return new JsonModel([
-            'success' => true
-        ]);
+        $product = $this->productTable->getProduct((int) $id);
+
+        return new JsonModel($product);
     }
 
     /**
-     * POST /products
+     * The handler for the POST /products endpoint
      * 
      * @param array contains a name, description, and price for
      *              a new product.
      *                     
-     * @return JsonModel
+     * @return JsonModel A product object
      */
     public function create($data)
     {
