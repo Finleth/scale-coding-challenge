@@ -18,9 +18,30 @@ class ProductsRestController extends AbstractRestfulController
         $this->productsTable = $productsTable;
     }
 
+    /**
+     * GET /products[?limit=25][&page=0][&sort=id]
+     * 
+     * Returns a list of filtered and sorted products
+     * 
+     * @return JsonModel
+     */
     public function getList()
     {
-        $products = $this->productsTable->getProducts();
+        $params = $this->params()->fromQuery();
+
+        $limit = isset($params['limit']) ? $params['limit'] : 25;
+        $page = isset($params['page']) ? ($params['page'] * $limit) : 0;
+        $sort = isset($params['sort']) ? $params['sort'] : 'id';
+
+        $sortDirection = strpos($sort, '-') === 0 ? 'DESC' : 'ASC';
+        $sort = preg_replace('/^-/', '', $sort);
+
+        $products = $this->productsTable->getProducts(
+            $limit,
+            $page,
+            $sort,
+            $sortDirection
+        );
 
         return new JsonModel(['data' => $products]);
     }

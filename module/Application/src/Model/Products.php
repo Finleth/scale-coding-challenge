@@ -14,7 +14,7 @@ class Products
         $this->id          = (!empty($data['id'])) ? (int) $data['id'] : null;
         $this->name        = (!empty($data['name'])) ? $data['name'] : null;
         $this->description = (!empty($data['description'])) ? $data['description'] : null;
-        $this->price       = (!empty($data['price'])) ? (float) sprintf('%0.2f', $data['price']) : 0.00;
+        $this->price       = (!empty($data['price'])) ? (double) sprintf('%0.2f', $data['price']) : 0.00;
     }
 
     public function toArray()
