@@ -123,6 +123,20 @@ class ProductTable
     }
 
     /**
+     * Deletes a product by ID from the database
+     * 
+     * @param integer The unique identifier for a product
+     * 
+     * @return boolean
+     */
+    public function deleteProduct(int $id)
+    {
+        $success =$this->tableGateway->delete(['id' => $id]);
+
+        return $success;
+    }
+
+    /**
      * Takes an array of product values and returns true/false
      * if the values are valid and meet the "required" criteria.
      * 

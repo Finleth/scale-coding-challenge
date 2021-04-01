@@ -72,7 +72,7 @@ class ProductsRestController extends AbstractRestfulController
     /**
      * The handler for the POST /products endpoint
      * 
-     * @param array contains a name, description, and price for
+     * @param array Contains a name, description, and price for
      *              a new product.
      *                     
      * @return JsonModel A product object
@@ -99,6 +99,15 @@ class ProductsRestController extends AbstractRestfulController
         return new JsonModel($response);
     }
 
+    /**
+     * The handler for the PUT /products/{id} endpoint
+     * 
+     * @param integer The unique identifier for a product
+     * @param array   Contains a name, description, and/or price to
+     *                update on a product.
+     * 
+     * @return JsonModel
+     */
     public function update($id, $data)
     {
         $response = [];
@@ -127,17 +136,30 @@ class ProductsRestController extends AbstractRestfulController
                     $response['error'] = 'There was an issue updating the product.';
                 }
             } else {
-                $response['error'] = 'Could not find product ID ' . $id;
+                $response['error'] = 'Product not found.';
             }
         }
         
         return new JsonModel($response);
     }
 
+    /**
+     * The handler for the DELETE /products/{id} endpoint
+     * 
+     * @param integer The unique identifier for a product
+     * 
+     * @return JsonModel
+     */
     public function delete($id)
     {
-        return new JsonModel([
-            'success' => true
-        ]);
+        $response = [];
+
+        $deleted = $this->productTable->deleteProduct((int) $id);
+
+        if (!$deleted) {
+            $response['error'] = 'Product not found.';
+        }
+
+        return new JsonModel($response);
     }
 }
