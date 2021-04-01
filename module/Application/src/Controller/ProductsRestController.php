@@ -56,9 +56,17 @@ class ProductsRestController extends AbstractRestfulController
      */
     public function get($id)
     {
+        $response = [];
+
         $product = $this->productTable->getProduct((int) $id);
 
-        return new JsonModel($product);
+        if ($product) {
+            $response = $product;
+        } else {
+            $response['error'] = 'Could not find product ID ' . $id;
+        }
+
+        return new JsonModel($response);
     }
 
     /**
@@ -93,9 +101,37 @@ class ProductsRestController extends AbstractRestfulController
 
     public function update($id, $data)
     {
-        return new JsonModel([
-            'success' => true
-        ]);
+        $response = [];
+
+        $validatedProduct = $this->productTable->validateProductArray($data);
+        
+        if (!$validatedProduct['valid']) {
+            $response['error'] = $validatedProduct['errors'];
+        } else {
+            $product = $this->productTable->getProduct((int) $id);
+            
+            if ($product) {
+                try {
+                    $updated = $this->productTable->updateProduct($id, $data);
+
+                    if ($updated) {
+                        // updating values from original $product isntead of running
+                        // a select on the database to get the updated record
+                        foreach ($updated as $field => $value) {
+                            $product[$field] = $value;
+                        }
+                    }
+
+                    $response = $product;
+                } catch (\Exception $e) {
+                    $response['error'] = 'There was an issue updating the product.';
+                }
+            } else {
+                $response['error'] = 'Could not find product ID ' . $id;
+            }
+        }
+        
+        return new JsonModel($response);
     }
 
     public function delete($id)

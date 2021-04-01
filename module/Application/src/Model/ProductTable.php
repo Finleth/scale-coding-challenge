@@ -69,15 +69,15 @@ class ProductTable
     {
         $rowset = $this->tableGateway->select(['id' => $id]);
         $row = $rowset->current();
-        
+
         $product = $row ? $row->toArray() : null;
 
         return $product;
     }
 
     /**
-     * Takes an instance of a Product model and inserts
-     * it into the products table.
+     * Takes an instance of a Product model and inserts it
+     * into the products table.
      * 
      * @param Product a Product class with the data for 
      *                 the product to be created.
@@ -93,6 +93,33 @@ class ProductTable
         $data['id'] = (int) $this->tableGateway->lastInsertValue;
 
         return $data;
+    }
+
+    /**
+     * Takes a product ID and at least one field/value to update
+     * 
+     * @param integer
+     * @param array
+     * 
+     * @return array
+     */
+    public function updateProduct(int $id, array $data)
+    {
+        $set = [];
+
+        if (isset($data['name'])) {
+            $set['name'] = $data['name'];
+        }
+        if (isset($data['description'])) {
+            $set['description'] = $data['description'];
+        }
+        if (isset($data['price'])) {
+            $set['price'] = $data['price'];
+        }
+
+        $success = $this->tableGateway->update($set, ['id' => $id]);
+
+        return $success ? $set : $success;
     }
 
     /**
