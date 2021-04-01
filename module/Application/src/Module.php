@@ -23,15 +23,15 @@ class Module
     {
         return array(
             'factories' => array(
-                'Application\Model\ProductsTable' =>  function($sm) {
-                    $tableGateway = $sm->get('ProductsTableGateway');
-                    $table = new Model\ProductsTable($tableGateway);
+                'Application\Model\ProductTable' =>  function($sm) {
+                    $tableGateway = $sm->get('ProductTableGateway');
+                    $table = new Model\ProductTable($tableGateway);
                     return $table;
                 },
-                'ProductsTableGateway' => function ($sm) {
+                'ProductTableGateway' => function ($sm) {
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Model\Products());
+                    $resultSetPrototype->setArrayObjectPrototype(new Model\Product());
                     return new TableGateway('products', $dbAdapter, null, $resultSetPrototype);
                 },
             ),

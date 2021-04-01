@@ -4,18 +4,19 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractRestfulController;
 use Zend\View\Model\JsonModel;
+use Application\Model\Product;
 
 class ProductsRestController extends AbstractRestfulController
 {
     /**
-     * @var \Application\Model\ProductsTable
+     * @var \Application\Model\ProductTable
      */
     protected $productsTable;
 
-    public function __construct(array $config, \Application\Model\ProductsTable $productsTable)
+    public function __construct(array $config, \Application\Model\ProductTable $productTable)
     {
         $this->config        = $config;
-        $this->productsTable = $productsTable;
+        $this->productTable = $productTable;
     }
 
     /**
@@ -36,7 +37,7 @@ class ProductsRestController extends AbstractRestfulController
         $sortDirection = strpos($sort, '-') === 0 ? 'DESC' : 'ASC';
         $sort = preg_replace('/^-/', '', $sort);
 
-        $products = $this->productsTable->getProducts(
+        $products = $this->productTable->getProducts(
             $limit,
             $page,
             $sort,
@@ -53,11 +54,34 @@ class ProductsRestController extends AbstractRestfulController
         ]);
     }
 
+    /**
+     * POST /products
+     * 
+     * @param array contains a name, description, and price for
+     *              a new product.
+     *                     
+     * @return JsonModel
+     */
     public function create($data)
     {
-        return new JsonModel([
-            'success' => true
-        ]);
+        $response = [];
+
+        $validatedProduct = $this->productTable->validateProductArray($data, true);
+        
+        if (!$validatedProduct['valid']) {
+            $response['error'] = $validatedProduct['errors'];
+        } else {
+            $product = new Product();
+            $product->exchangeArray($data);
+            
+            try {
+                $response = $this->productTable->createProduct($product);
+            } catch (\Exception $e) {
+                $response['error'] = 'There was an issue creating the product.';
+            }
+        }
+        
+        return new JsonModel($response);
     }
 
     public function update($id, $data)

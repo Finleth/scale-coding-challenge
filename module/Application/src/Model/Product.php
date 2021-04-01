@@ -2,7 +2,7 @@
 
 namespace Application\Model;
 
-class Products
+class Product
 {
     private $id;
     private $name;
@@ -12,9 +12,9 @@ class Products
     public function exchangeArray($data)
     {
         $this->id          = (!empty($data['id'])) ? (int) $data['id'] : null;
-        $this->name        = (!empty($data['name'])) ? $data['name'] : null;
-        $this->description = (!empty($data['description'])) ? $data['description'] : null;
-        $this->price       = (!empty($data['price'])) ? (double) sprintf('%0.2f', $data['price']) : 0.00;
+        $this->name        = (!empty($data['name'])) ? (string) $data['name'] : null;
+        $this->description = (!empty($data['description'])) ? (string) $data['description'] : null;
+        $this->price       = (!empty($data['price'])) ? (double) sprintf('%0.2f', $data['price']) : null;
     }
 
     public function toArray()
