@@ -9,7 +9,6 @@
                 <option value="25" selected>25</option>
                 <option value="50">50</option>
                 <option value="100">100</option>
-                <option value="">All</option>
             </select>
         </div>
     </div>
@@ -34,16 +33,16 @@
             </select>
         </div>
     </div>
-    <div class="col-auto btn-group btn-group-toggle" data-toggle="buttons">
+    <div id="product-table-sort-direction" class="col-auto btn-group btn-group-toggle" data-toggle="buttons">
         <label class="btn btn-light active">
-            <input type="radio" name="options" id="option1" autocomplete="off" checked>ASC
+            <input type="radio" name="asc" autocomplete="off" value="" checked>ASC
         </label>
         <label class="btn btn-light">
-            <input type="radio" name="options" id="option2" autocomplete="off">DESC
+            <input type="radio" name="desc" autocomplete="off" value='-'>DESC
         </label>
     </div>
     <div class="col-auto">
-        <button class="btn btn-primary">Filter</button>
+        <button id="product-table-filter" class="btn btn-primary">Filter</button>
     </div>
 </div>
 
@@ -59,20 +58,20 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="product-table-body">
                 <?php if (empty($products)) : ?>
                     <tr><td colspan="4" class="text-center">No products</td></tr>
                 <?php endif; ?>
 
                 <?php foreach ($products as $product) : ?>
-                    <tr>
+                    <tr data-product-id="<?= $product['id'] ?>">
                         <td><?= $product['id'] ?></td>
                         <td><?= $product['name'] ?></td>
                         <td><?= $product['description'] ?></td>
-                        <td><?= $product['price'] ?></td>
+                        <td>$<?= $product['price'] ?></td>
                         <td>
-                            <a href="#"><i class="fas fa-pencil-alt fa-fw"></i></a>
-                            <a href="#"><i class="fas fa-trash fa-fw"></i></a>    
+                            <a href="#"><i class="fas fa-pencil-alt fa-fw edit-product"></i></a>
+                            <a href="#"><i class="fas fa-trash fa-fw delete-product"></i></a>    
                         </td>
                     </tr>
                 <?php endforeach; ?>
