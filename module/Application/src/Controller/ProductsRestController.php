@@ -63,7 +63,7 @@ class ProductsRestController extends AbstractRestfulController
         if ($product) {
             $response = $product;
         } else {
-            $response['error'] = 'Could not find product ID ' . $id;
+            $response['error'] = 'Product not found.';
         }
 
         return new JsonModel($response);

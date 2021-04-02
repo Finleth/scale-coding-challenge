@@ -12,8 +12,20 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+    /**
+     * @var \Application\Model\ProductTable
+     */
+    protected $productsTable;
+
+    public function __construct(\Application\Model\ProductTable $productTable)
+    {
+        $this->productTable = $productTable;
+    }
+
     public function indexAction()
     {
-        return new ViewModel();
+        $products = $this->productTable->getProducts();
+
+        return new ViewModel(['products' => $products]);
     }
 }
