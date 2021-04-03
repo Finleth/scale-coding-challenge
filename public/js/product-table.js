@@ -30,16 +30,16 @@ $(document).ready(function(){
 
             $.ajax(ajaxOptions).then(function(res) {
                 if (!res.error) {
-                    if (!res.data.length) {
-                        self.alertMessage('No rows found!', 'warning', 'product-table');
-                        return;
-                    }
                     ajaxOptions.data.limit = 0;
 
                     $.ajax(ajaxOptions).then(function(res2) {
                         if (!res2.error) {
-                            self.redrawProductTable(res.data);
-                            self.updatePaginationInfo(self.limitElement.val() >> 0, self.pageElement.val() >> 0, res.data.length, res2.data.length)
+                            if (!res.data.length && res2.data.length) {
+                                self.alertMessage('No products found.', 'warning', 'product-table');
+                            } else {
+                                self.redrawProductTable(res.data);
+                                self.updatePaginationInfo(self.limitElement.val() >> 0, self.pageElement.val() >> 0, res.data.length, res2.data.length);
+                            }
                         } else {
                             self.alertMessage(res.error, 'warning', 'product-table');
                         }
@@ -297,9 +297,14 @@ $(document).ready(function(){
 
             this.productTableBody.empty();
 
-            rows.forEach(function(row) {
-                self.drawProductRow(row);
-            });
+            if (rows.length) {
+                rows.forEach(function(row) {
+                    self.drawProductRow(row);
+                });
+            } else {
+                var row = $('<tr></tr>').append($('<td></td>').attr('colspan', 5).addClass('text-center').text('No products'));
+                this.productTableBody.append(row);
+            }
         },
 
         /**
@@ -338,8 +343,8 @@ $(document).ready(function(){
          */
         updatePaginationInfo: function(limit, page, records, total)
         {
-            var start = ((page - 1) * limit) + 1;
-            var end = start + records - 1;
+            var start = total ? ((page - 1) * limit) + 1 : 0;
+            var end = total ? start + records - 1 : 0;
             this.productTablePagination.text(start + '-' + end);
             this.productTableTotal.text(total);
         },

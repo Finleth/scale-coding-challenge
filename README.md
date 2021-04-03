@@ -1,145 +1,56 @@
 # Scale Fullstack Developer Assessment
-## Original Requirements
 
-In this excercise you will create a simple web application that contains a REST API and frontend UI which uses the API.
+Product CRUD application built for the Scale Media technical coding challenge. Used Zend Framework for the application with a MySQL database run locally using MAMP.
 
-You are free to use any PHP framework to create the backend application.
+## Notes
 
-Additionally you are free to use your choice of javascript libraries or frameworks to create the UI.
+This application made use of the Zend RESTful abstract controller interface to create the API portion per the project specifications. The other option would have been to use the action controller to handle the product page(s) which would have been more centered around a single page per action (create, read, delete, etc.) and wouldn't have followed the backend requirements.
 
-## Deliverables
+For the frontend I still used Zend, making use of the default index.phtml page which is served via the index action controller. It's a single page with JavaScript/jQuery handling the dynamic updating of the DOM.
 
-Your application will need to be archived in a ZIP or TAR file and emailed to your recruiter.
+For a list of to-dos and things I'd like to update/enhance in the future, see the [Future Tasks](#future-tasks) section.
 
-Please be sure to exclude any "vendor" directories with third party libraries to keep the final archive size down.
+## Getting Started
 
-Include instructions on how to run your application in a README.md file.
+These instructions assume you've already downloaded/forked this repository and have it on your local machine.
 
-## API
+### Install Dependencies
 
-You should create a REST API for "products" which provides the following endpoints to retrieve and modify products from a database.
+Within the project root directory, run the following command:
 
-#### GET /products
-
-This endpoint will retrieve all of the products in the system.
-
-The endpoint should accept the following query string parameters:
-
-|Property|Default Value|Description|Example|
-|--------|-------------|-----------|-------|
-|page    | 0           | the page to retrieve | ?page=2
-|limit   | 25          | the page size | ?limit=100
-|sort    | id          | the property to sort by. add a minus to specify descending sort| ?sort=name<br>?sort=-name
-
-```json
-{
-	"data": [
-		{
-			"id": 1,
-			"name": "Product #1",
-			"description": "A product description",
-			"price": 29.95
-		},
-		{
-			"id": 2,
-			"name": "Product #2",
-			"description": "A product description",
-			"price": 49.95
-		}
-	]
-}
+```
+composer install
 ```
 
----
+If you don't have composer installed or are using version ^2, you can run this instead:
 
-#### POST /products
-
-This endpoint will create a new user
-
-Sample Request:
-
-```json
-{
-	"name": "New Product",
-	"description": "Another product description",
-	"price": 19.95
-}
+```
+php composer.phar install
 ```
 
-Sample Response:
+### Set Up Database
 
-```json
-{
-	"id": 100,
-	"name": "New Product",
-	"description": "Another product description",
-	"price": 19.95
-}
-```
+Once the dependencies have been installed, next we will need to set up the database. As mentioned earlier, I used the MySQL database that comes with MAMP. Use whatever you have/you're comfortable setting up (as long as it's MySQL). Once you have a database available for use, run the `migration.sql` script found in the project root directory.
 
----
+### Add Configurations
 
-#### GET /products/[ID]
+Now that we've got the database set up with our table, it's time to add our database configuration file. In the `config/autoload` folder, create a new file called `database.local.php` based off of the `database.local.dist.php`. Add your MySQL username, password, host, database, and port (if required).
 
-This endpoint will retrieve a specific product.
+### Start Server
 
+This last step is up to you on how you want to run this application. If you use MAMP, then just set the web server folder to the `public` folder of this repository and start the server. If you use Vagrant or Docker then you may have to make updates to the DockerFile/VagrantFile to get it to start up.
 
-Sample Response:
+Now that you have your server running, go to your localhost (on whichever port it your server is running) and play around!
 
-```json
-{
-	"id": 1,
-	"name": "Product #1",
-	"description": "A product description",
-	"price": 29.95
-}
-```
+## Future Tasks
 
----
+My focus while coding this project was to get the main aspects up and running with a semi-usable interface. As such, I'm aware there are plenty of areas for improvement.
 
-#### PUT /products/[ID]
+Here are some of the areas I've personally noted that I'd like to add and enhance:
 
-This endpoint will update a specific product.
-
-Sample Request:
-
-```json
-{
-	"name": "New Name",
-	"description": "New description",
-	"price": 99.95
-}
-```
-
-Sample Response:
-
-```json
-{
-	"id": 1,
-	"name": "New Name",
-	"description": "New description",
-	"price": 99.95
-}
-```
-
----
-
-#### DELETE /products/[ID]
-
-This endpoint will delete a specific product.
-
-## UI Application
-
-Create a javascript application which uses your API to provide a simple admin-type interface which contains the following views.
-
-### List View
-
-This should display a table which lists all of the products returned from the API.
-
-### Add Product View
-
-This should display a form which allows a new product to be added.
-
-### Edit Product View
-
-This should display a form for an existing product to allow it to be modified.
+- Backend error handling: There currently is a lack of handling and logging of errors in the API endpoints
+- Backend response statuses: I have responses being returned as 200 but with an error message. In the future I'd set up the Zend so I could properly send status codes for the correct successes/errors
+- Unit tests: I would like to get at least the API endpoints covered under unit tests
+- Frontend actions: The actions (especially delete) don't have any tooltip or warning. I would add some plugins to handle that (and add a confirmation to the delete)
+- Frontend table loading: At the moment, on create or delete, I reload the entire table (with the filters). The reason is so the fitlering and sorting is handled when updating the rows. For efficiency, it would be best to update the table entirely on the frontend on create/delete and calculate where the row should be inserted or which row should be added after a delete.
+- Create a more fluid filtering/sorting system with proper pagination.

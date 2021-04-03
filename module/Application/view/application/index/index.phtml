@@ -64,7 +64,7 @@
             </thead>
             <tbody id="product-table-body">
                 <?php if (empty($products)) : ?>
-                    <tr><td colspan="4" class="text-center">No products</td></tr>
+                    <tr><td colspan="5" class="text-center">No products</td></tr>
                 <?php endif; ?>
 
                 <?php foreach ($products as $product) : ?>
@@ -89,7 +89,7 @@
         </table>
 
         <p class="text-light">
-            Showing <span id="product-table-pagination"><?= '1-' . count($products) ?></span> of <span id="product-table-total"><?= $total ?></span> products
+            Showing <span id="product-table-pagination"><?= ($total ? '1' : '0') . '-' . count($products) ?></span> of <span id="product-table-total"><?= $total ?></span> products
         </p>
     </div>
 </div>
