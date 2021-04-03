@@ -25,7 +25,11 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         $products = $this->productTable->getProducts();
+        $total = count($this->productTable->getProducts(0));
 
-        return new ViewModel(['products' => $products]);
+        return new ViewModel([
+            'products' => $products,
+            'total' => $total
+        ]);
     }
 }

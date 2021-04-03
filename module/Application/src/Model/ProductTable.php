@@ -44,9 +44,12 @@ class ProductTable
 
         $select = $this->tableGateway->getSql()->select();
 
-        $select->order($order);
-        $select->limit($limit);
-        $select->offset($page);
+        // allow for a fetch all when limit = 0
+        if ($limit !== 0) {
+            $select->order($order);
+            $select->limit($limit);
+            $select->offset($page);
+        }
 
         $rowset = $this->tableGateway->selectWith($select);
 
@@ -164,7 +167,7 @@ class ProductTable
             $response['errors'][] = 'At least one of the "name", "description" or "price" fields is required.';
         }
 
-        if (isset($product['name'])) {
+        if (isset($product['name']) && $product['name'] !== '') {
             if (strlen($product['name']) > 255) {
                 $response['valid'] = false;
                 $response['errors'][] = 'Please keep the "name" under 255 characters long.';
@@ -174,7 +177,7 @@ class ProductTable
             $response['errors'][] = 'The "name" field is required.';
         }
 
-        if (isset($product['description'])) {
+        if (isset($product['description']) && $product['description'] !== '') {
             if (strlen($product['description']) > 400) {
                 $response['valid'] = false;
                 $response['errors'][] = 'Please keep the "description" under 400 characters long.';
@@ -184,7 +187,7 @@ class ProductTable
             $response['errors'][] = 'The "description" field is required.';
         }
 
-        if (isset($product['price'])) {
+        if (isset($product['price']) && $product['price'] !== '') {
             if ($product['price'] < 0) {
                 $response['valid'] = false;
                 $response['errors'][] = 'The price cannot be negative.';

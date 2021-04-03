@@ -46,6 +46,8 @@
     </div>
 </div>
 
+<div id="product-table-alert" class="alert alert-warning" role="alert" style="display: none;"></div>
+
 <div class="row">
     <div class="col-xs-12 table-responsive">
         <table id="product-table" class="table table-striped table-dark">
@@ -55,7 +57,9 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Price</th>
-                    <th>Action</th>
+                    <th>
+                        Action <a href="#" data-toggle="modal" data-target="#create-product-modal"><i class="fas fa-plus-circle fa-fw" ></i></a>
+                    </th>
                 </tr>
             </thead>
             <tbody id="product-table-body">
@@ -66,20 +70,28 @@
                 <?php foreach ($products as $product) : ?>
                     <tr data-product-id="<?= $product['id'] ?>">
                         <td><?= $product['id'] ?></td>
-                        <td class="product-name"><?= $product['name'] ?></td>
-                        <td class="product-description"><?= $product['description'] ?></td>
+                        <td class="product-name"><?= $product['name'] ? $product['name'] : '-' ?></td>
+                        <td class="product-description"><?= $product['description'] ? $product['description'] : '-' ?></td>
                         <td class="product-price-col">
-                            $<span class="product-price"><?= $product['price'] ?></span>
+                            <?php if ($product['price']) : ?>
+                                $<span class="product-price"><?= number_format($product['price'], 2) ?></span>
+                            <?php else : ?>
+                                -
+                            <?php endif; ?>
                         </td>
                         <td class="product-actions">
                             <a href="#"><i class="fas fa-pencil-alt fa-fw edit-product"></i></a>
-                            <a href="#"><i class="fas fa-trash fa-fw delete-product"></i></a>    
+                            <a href="#"><i class="fas fa-trash fa-fw delete-product"></i></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
-        <p class="text-light">Showing <?= count($products) ?> of <?= count($products) ?> products</p>
+        <p class="text-light">
+            Showing <span id="product-table-pagination"><?= '1-' . count($products) ?></span> of <span id="product-table-total"><?= $total ?></span> products
+        </p>
     </div>
 </div>
+
+<?= $this->partial('create-product.phtml') ?>
