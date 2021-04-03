@@ -66,10 +66,12 @@
                 <?php foreach ($products as $product) : ?>
                     <tr data-product-id="<?= $product['id'] ?>">
                         <td><?= $product['id'] ?></td>
-                        <td><?= $product['name'] ?></td>
-                        <td><?= $product['description'] ?></td>
-                        <td>$<?= $product['price'] ?></td>
-                        <td>
+                        <td class="product-name"><?= $product['name'] ?></td>
+                        <td class="product-description"><?= $product['description'] ?></td>
+                        <td class="product-price-col">
+                            $<span class="product-price"><?= $product['price'] ?></span>
+                        </td>
+                        <td class="product-actions">
                             <a href="#"><i class="fas fa-pencil-alt fa-fw edit-product"></i></a>
                             <a href="#"><i class="fas fa-trash fa-fw delete-product"></i></a>    
                         </td>
